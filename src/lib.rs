@@ -39,15 +39,15 @@
 //!
 //! const DATA: [u8; 20] = [0xab; 20]; // Arbitrary data to be encoded.
 //! const STRING: &str = "abc14w46h2at4w46h2at4w46h2at4w46h2at958ngu";
-//! const TAP_ADDR: &str = "bc1p4w46h2at4w46h2at4w46h2at4w46h2at5kreae";
+//! const TAP_ADDR: &str = "blk1p4w46h2at4w46h2at4w46h2at4w46h2atkcwqc0";
 //!
 //! // Encode arbitrary data using "abc" as the human-readable part and append a bech32m checksum.
 //! let hrp = Hrp::parse("abc").expect("valid hrp");
 //! let string = bech32::encode::<Bech32m>(hrp, &DATA).expect("failed to encode string");
 //! assert_eq!(string, STRING);
 //!
-//! // Encode arbitrary data as a Bitcoin taproot address.
-//! let taproot_address = segwit::encode(hrp::BC, segwit::VERSION_1, &DATA).expect("valid witness version and program");
+//! // Encode arbitrary data as a Blackcoin taproot address.
+//! let taproot_address = segwit::encode(hrp::BLK, segwit::VERSION_1, &DATA).expect("valid witness version and program");
 //! assert_eq!(taproot_address, TAP_ADDR);
 //!
 //! // No-alloc: Encode without allocating (ignoring that String::new() allocates :).
@@ -66,7 +66,7 @@
 //!
 //! const DATA: [u8; 20] = [0xab; 20]; // Arbitrary data to be encoded.
 //! const STRING: &str = "abc14w46h2at4w46h2at4w46h2at4w46h2at958ngu";
-//! const TAP_ADDR: &str = "bc1p4w46h2at4w46h2at4w46h2at4w46h2at5kreae";
+//! const TAP_ADDR: &str = "blk1p4w46h2at4w46h2at4w46h2at4w46h2atkcwqc0";
 //!
 //! // Decode a bech32 encoded string that includes a bech32/bech32m checksum.
 //! //

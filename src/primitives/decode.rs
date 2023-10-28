@@ -1007,9 +1007,9 @@ mod tests {
 
     #[test]
     fn check_hrp_uppercase_returns_lower() {
-        let addr = "BC1QW508D6QEJXTDG4Y5R3ZARVARY0C5XW7KV8F3T4";
+        let addr = "BLK1QJERYV2ELNNC4223ZX0L7RKEKFCLS7T8PM0TWTE";
         let unchecked = UncheckedHrpstring::new(addr).expect("failed to parse address");
-        assert_eq!(unchecked.hrp(), Hrp::parse_unchecked("bc"));
+        assert_eq!(unchecked.hrp(), Hrp::parse_unchecked("blk"));
     }
 
     #[test]

@@ -303,22 +303,22 @@ mod tests {
     use crate::{Bech32, ByteIterExt, Fe32, Fe32IterExt, Hrp};
 
     // Tests below using this data, are based on the test vector (from BIP-173):
-    // BC1QW508D6QEJXTDG4Y5R3ZARVARY0C5XW7KV8F3T4: 0014751e76e8199196d454941c45d1b3a323f1433bd6
+    // BLK1QJERYV2ELNNC4223ZX0L7RKEKFCLS7T8PM0TWTE: 00149646462b3f9cf1552a2233ffe1db364e3f0f2ce1
     #[rustfmt::skip]
     const DATA: [u8; 20] = [
-        0x75, 0x1e, 0x76, 0xe8, 0x19, 0x91, 0x96, 0xd4,
-        0x54, 0x94, 0x1c, 0x45, 0xd1, 0xb3, 0xa3, 0x23,
-        0xf1, 0x43, 0x3b, 0xd6,
+        0x96, 0x46, 0x46, 0x2b, 0x3f, 0x9c, 0xf1,
+        0x55, 0x2a, 0x22, 0x33, 0xff, 0xe1, 0xdb, 
+        0x36, 0x4e, 0x3f, 0x0f, 0x2c, 0xe1
     ];
 
     #[test]
     fn hrpstring_iter() {
         let iter = DATA.iter().copied().bytes_to_fes();
 
-        let hrp = Hrp::parse_unchecked("bc");
+        let hrp = Hrp::parse_unchecked("blk");
         let iter = iter.with_checksum::<Bech32>(&hrp).with_witness_version(Fe32::Q).chars();
 
-        assert!(iter.eq("bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4".chars()));
+        assert!(iter.eq("blk1qjeryv2elnnc4223zx0l7rkekfcls7t8pm0twte".chars()));
     }
 
     #[test]
@@ -326,11 +326,11 @@ mod tests {
     fn hrpstring_iter_collect() {
         let iter = DATA.iter().copied().bytes_to_fes();
 
-        let hrp = Hrp::parse_unchecked("bc");
+        let hrp = Hrp::parse_unchecked("blk");
         let iter = iter.with_checksum::<Bech32>(&hrp).with_witness_version(Fe32::Q).chars();
 
         let encoded = iter.collect::<String>();
-        assert_eq!(encoded, "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4");
+        assert_eq!(encoded, "blk1qjeryv2elnnc4223zx0l7rkekfcls7t8pm0twte");
     }
 
     #[test]
@@ -338,10 +338,10 @@ mod tests {
         let char_len = "w508d6qejxtdg4y5r3zarvary0c5xw7k".len();
         let iter = DATA.iter().copied().bytes_to_fes();
 
-        let hrp = Hrp::parse_unchecked("bc");
+        let hrp = Hrp::parse_unchecked("blk");
         let iter = iter.with_checksum::<Bech32>(&hrp).with_witness_version(Fe32::Q).chars();
 
-        let checksummed_len = 2 + 1 + 1 + char_len + 6; // bc + SEP + Q + chars + checksum
+        let checksummed_len = 3 + 1 + 1 + char_len + 6; // blk + SEP + Q + chars + checksum
         assert_eq!(iter.size_hint().0, checksummed_len);
     }
 }

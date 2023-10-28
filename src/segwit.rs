@@ -20,17 +20,17 @@
 //! ];
 //!
 //! // Encode a taproot address suitable for use on mainnet.
-//! let _ = segwit::encode_v1(hrp::BC, &witness_prog);
+//! let _ = segwit::encode_v1(hrp::BLK, &witness_prog);
 //!
 //! // Encode a segwit v0 address suitable for use on testnet.
-//! let _ = segwit::encode_v0(hrp::TB, &witness_prog);
+//! let _ = segwit::encode_v0(hrp::TBLK, &witness_prog);
 //!
 //! // If you have the witness version already you can use:
 //! # let witness_version = segwit::VERSION_0;
-//! let _ = segwit::encode(hrp::BC, witness_version, &witness_prog);
+//! let _ = segwit::encode(hrp::BLK, witness_version, &witness_prog);
 //!
-//! // Decode a Bitcoin bech32 segwit address.
-//! let address = "bc1q2s3rjwvam9dt2ftt4sqxqjf3twav0gdx0k0q2etxflx38c3x8tnssdmnjq";
+//! // Decode a Blackcoin bech32 segwit address.
+//! let address = "blk1qd08wdgs2j3t8hzmm92etm26z3jmh9xzv0et8gjv9fq39fmqwlfqq24u23m";
 //! let (hrp, witness_version, witness_program) = segwit::decode(address).expect("failed to decode address");
 //! # }
 //! ```
@@ -394,7 +394,8 @@ mod tests {
     fn roundtrip_valid_mainnet_addresses() {
         // A few recent addresses from mainnet (Block 801266).
         let addresses = vec![
-            "bc1q2s3rjwvam9dt2ftt4sqxqjf3twav0gdx0k0q2etxflx38c3x8tnssdmnjq", // Segwit v0
+            "blk1qd08wdgs2j3t8hzmm92etm26z3jmh9xzv0et8gjv9fq39fmqwlfqq24u23m", // Segwit v0
+            // Blackcoin ToDo: put correct Segwit v1 address
             "bc1py3m7vwnghyne9gnvcjw82j7gqt2rafgdmlmwmqnn3hvcmdm09rjqcgrtxs", // Segwit v1
         ];
 
@@ -407,8 +408,9 @@ mod tests {
 
     fn witness_program() -> [u8; 20] {
         [
-            0x75, 0x1e, 0x76, 0xe8, 0x19, 0x91, 0x96, 0xd4, 0x54, 0x94, 0x1c, 0x45, 0xd1, 0xb3,
-            0xa3, 0x23, 0xf1, 0x43, 0x3b, 0xd6,
+            0x96, 0x46, 0x46, 0x2b, 0x3f, 0x9c, 0xf1,
+            0x55, 0x2a, 0x22, 0x33, 0xff, 0xe1, 0xdb, 
+            0x36, 0x4e, 0x3f, 0x0f, 0x2c, 0xe1
         ]
     }
 
@@ -416,10 +418,10 @@ mod tests {
     fn encode_lower_to_fmt() {
         let program = witness_program();
         let mut address = String::new();
-        encode_to_fmt_unchecked(&mut address, hrp::BC, VERSION_0, &program)
+        encode_to_fmt_unchecked(&mut address, hrp::BLK, VERSION_0, &program)
             .expect("failed to encode address to QR code");
 
-        let want = "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4";
+        let want = "blk1qjeryv2elnnc4223zx0l7rkekfcls7t8pm0twte";
         assert_eq!(address, want);
     }
 
@@ -427,10 +429,10 @@ mod tests {
     fn encode_upper_to_fmt() {
         let program = witness_program();
         let mut address = String::new();
-        encode_upper_to_fmt_unchecked(&mut address, hrp::BC, VERSION_0, &program)
+        encode_upper_to_fmt_unchecked(&mut address, hrp::BLK, VERSION_0, &program)
             .expect("failed to encode address to QR code");
 
-        let want = "BC1QW508D6QEJXTDG4Y5R3ZARVARY0C5XW7KV8F3T4";
+        let want = "BLK1QJERYV2ELNNC4223ZX0L7RKEKFCLS7T8PM0TWTE";
         assert_eq!(address, want);
     }
 
@@ -439,11 +441,11 @@ mod tests {
     fn encode_lower_to_writer() {
         let program = witness_program();
         let mut buf = Vec::new();
-        encode_lower_to_writer_unchecked(&mut buf, hrp::BC, VERSION_0, &program)
+        encode_lower_to_writer_unchecked(&mut buf, hrp::BLK, VERSION_0, &program)
             .expect("failed to encode");
 
         let address = std::str::from_utf8(&buf).expect("ascii is valid utf8");
-        let want = "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4";
+        let want = "blk1qjeryv2elnnc4223zx0l7rkekfcls7t8pm0twte";
         assert_eq!(address, want);
     }
 
@@ -452,11 +454,11 @@ mod tests {
     fn encode_upper_to_writer() {
         let program = witness_program();
         let mut buf = Vec::new();
-        encode_upper_to_writer_unchecked(&mut buf, hrp::BC, VERSION_0, &program)
+        encode_upper_to_writer_unchecked(&mut buf, hrp::BLK, VERSION_0, &program)
             .expect("failed to encode");
 
         let address = std::str::from_utf8(&buf).expect("ascii is valid utf8");
-        let want = "BC1QW508D6QEJXTDG4Y5R3ZARVARY0C5XW7KV8F3T4";
+        let want = "BLK1QJERYV2ELNNC4223ZX0L7RKEKFCLS7T8PM0TWTE";
         assert_eq!(address, want);
     }
 
@@ -465,20 +467,20 @@ mod tests {
     fn encode_lower_to_writer_including_lowecaseing_hrp() {
         let program = witness_program();
         let mut buf = Vec::new();
-        let hrp = Hrp::parse_unchecked("BC");
+        let hrp = Hrp::parse_unchecked("BLK");
         encode_lower_to_writer_unchecked(&mut buf, hrp, VERSION_0, &program)
             .expect("failed to encode");
 
         let address = std::str::from_utf8(&buf).expect("ascii is valid utf8");
-        let want = "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4";
+        let want = "blk1qjeryv2elnnc4223zx0l7rkekfcls7t8pm0twte";
         assert_eq!(address, want);
     }
 
     #[test]
     fn encoded_length_works() {
         let addresses = vec![
-            "bc1q2s3rjwvam9dt2ftt4sqxqjf3twav0gdx0k0q2etxflx38c3x8tnssdmnjq",
-            "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
+            "blk1qd08wdgs2j3t8hzmm92etm26z3jmh9xzv0et8gjv9fq39fmqwlfqq24u23m",
+            "blk1qjeryv2elnnc4223zx0l7rkekfcls7t8pm0twte",
         ];
 
         for address in addresses {
