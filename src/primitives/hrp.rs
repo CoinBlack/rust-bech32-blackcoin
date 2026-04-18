@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-//! Provides an `Hrp` type that represents the human-readable part of a bech32 encoded string.
+//! Provides an [`Hrp`] type that represents the human-readable part of a bech32 encoded string.
 //!
 //! > The human-readable part, which is intended to convey the type of data, or anything else that
 //! > is relevant to the reader. This part MUST contain 1 to 83 US-ASCII characters, with each
@@ -191,29 +191,29 @@ impl Hrp {
     #[allow(clippy::len_without_is_empty)] // HRP is never empty.
     pub fn len(&self) -> usize { self.size }
 
-    /// Returns `true` if this [`Hrp`] is valid according to the bips.
+    /// Returns `true` if this HRP is valid according to the bips.
     ///
     /// [BIP-173] states that the HRP must be either "blk" or "tblk".
     ///
-    /// [BIP-173]: https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki#user-content-Segwit_address_format
+    /// [BIP-173]: <https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki#user-content-Segwit_address_format>
     #[inline]
     pub fn is_valid_segwit(&self) -> bool {
         self.is_valid_on_mainnet() || self.is_valid_on_testnet()
     }
 
-    /// Returns `true` if this hrpstring is valid on the Blackcoin network i.e., HRP is "blk".
+    /// Returns `true` if this HRP is valid on the Blackcoin mainnet i.e., HRP is "blk".
     #[inline]
     pub fn is_valid_on_mainnet(&self) -> bool { *self == self::BLK }
 
-    /// Returns `true` if this hrpstring is valid on the Blackcoin testnet network i.e., HRP is "tblk".
+    /// Returns `true` if this HRP is valid on the Blackcoin testnet i.e., HRP is "tblk".
     #[inline]
     pub fn is_valid_on_testnet(&self) -> bool { *self == self::TBLK }
 
-    /// Returns `true` if this hrpstring is valid on the Blackcoin signet network i.e., HRP is "tblk".
+    /// Returns `true` if this HRP is valid on the Blackcoin signet i.e., HRP is "tblk".
     #[inline]
     pub fn is_valid_on_signet(&self) -> bool { *self == self::TBLK }
 
-    /// Returns `true` if this hrpstring is valid on the Blackcoin regtest network i.e., HRP is "blrt".
+    /// Returns `true` if this HRP is valid on the Blackcoin regtest i.e., HRP is "blrt".
     #[inline]
     pub fn is_valid_on_regtest(&self) -> bool { *self == self::BLRT }
 }
@@ -221,7 +221,7 @@ impl Hrp {
 /// Displays the human-readable part.
 ///
 /// If an uppercase HRP was parsed during object construction then the returned string will be
-/// in uppercase also. For a lowercase string see [`Self::to_lowercase`].
+/// in uppercase also. For a lowercase string see `Self::to_lowercase`.
 impl fmt::Display for Hrp {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         for c in self.char_iter() {
@@ -371,6 +371,7 @@ impl<'b> FusedIterator for LowercaseCharIter<'b> {}
 fn is_ascii_uppercase(b: u8) -> bool { (65..=90).contains(&b) }
 
 /// Errors encountered while checking the human-readable part as defined by [BIP-173].
+///
 /// [BIP-173]: <https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki#user-content-Bech32>
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[non_exhaustive]

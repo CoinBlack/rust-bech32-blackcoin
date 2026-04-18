@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-//! Segregated Witness functionality - useful for enforcing parts of [`BIP-173`] and [`BIP-350`].
+//! Segregated Witness functionality - useful for enforcing parts of [BIP-173] and [BIP-350].
 //!
 //! [BIP-173]: <https://github.com/bitcoin/bips/blob/master/bip-0173.mediawiki>
 //! [BIP-350]: <https://github.com/bitcoin/bips/blob/master/bip-0350.mediawiki>
@@ -65,9 +65,10 @@ pub fn validate_witness_program_length(
 #[non_exhaustive]
 pub struct InvalidWitnessVersionError(pub Fe32);
 
+#[rustfmt::skip]
 impl fmt::Display for InvalidWitnessVersionError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "field element does not represent a valid witness version")
+        write!(f, "invalid segwit witness version: {} (bech32 character: '{}')", self.0.to_u8(), self.0)
     }
 }
 

@@ -89,8 +89,8 @@ pub fn decode(s: &str) -> Result<(Hrp, Fe32, Vec<u8>), DecodeError> {
 /// Does validity checks on the `witness_version`, length checks on the `witness_program`, and
 /// checks the total encoded string length.
 ///
-/// As specified by [`BIP-350`] we use the [`Bech32m`] checksum algorithm for witness versions 1 and
-/// above, and for witness version 0 we use the original ([`BIP-173`]) [`Bech32`] checksum
+/// As specified by [BIP-350] we use the [`Bech32m`] checksum algorithm for witness versions 1 and
+/// above, and for witness version 0 we use the original ([BIP-173]) [`Bech32`] checksum
 /// algorithm.
 ///
 /// See also [`encode_v0`] or [`encode_v1`].
@@ -227,10 +227,12 @@ pub fn encode_upper_to_fmt_unchecked<W: fmt::Write>(
     Ok(())
 }
 
-/// Encodes a segwit address to a writer ([`std::io::Write`]) using lowercase characters.
+/// Encodes a segwit address to a writer ([`io::Write`]) using lowercase characters.
 ///
 /// There are no guarantees that the written string is a valid segwit address unless all the
 /// parameters are valid. See the body of `encode()` to see the validity checks required.
+///
+/// [`io::Write`]: std::io::Write
 #[cfg(feature = "std")]
 #[inline]
 pub fn encode_to_writer_unchecked<W: std::io::Write>(
@@ -242,10 +244,12 @@ pub fn encode_to_writer_unchecked<W: std::io::Write>(
     encode_lower_to_writer_unchecked(w, hrp, witness_version, witness_program)
 }
 
-/// Encodes a segwit address to a writer ([`std::io::Write`]) using lowercase characters.
+/// Encodes a segwit address to a writer ([`io::Write`]) using lowercase characters.
 ///
 /// There are no guarantees that the written string is a valid segwit address unless all the
 /// parameters are valid. See the body of `encode()` to see the validity checks required.
+///
+/// [`io::Write`]: std::io::Write
 #[cfg(feature = "std")]
 #[inline]
 pub fn encode_lower_to_writer_unchecked<W: std::io::Write>(
@@ -280,12 +284,14 @@ pub fn encode_lower_to_writer_unchecked<W: std::io::Write>(
     Ok(())
 }
 
-/// Encodes a segwit address to a [`std::io::Write`] writer using uppercase characters.
+/// Encodes a segwit address to a [`io::Write`] writer using uppercase characters.
 ///
 /// This is provided for use when creating QR codes.
 ///
 /// There are no guarantees that the written string is a valid segwit address unless all the
 /// parameters are valid. See the body of `encode()` to see the validity checks required.
+///
+/// [`io::Write`]: std::io::Write
 #[cfg(feature = "std")]
 #[inline]
 pub fn encode_upper_to_writer_unchecked<W: std::io::Write>(
@@ -368,6 +374,7 @@ impl From<SegwitHrpstringError> for DecodeError {
 /// An error while constructing a [`SegwitHrpstring`] type.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[non_exhaustive]
+#[cfg(feature = "alloc")]
 pub enum EncodeError {
     /// Invalid witness version (must be 0-16 inclusive).
     WitnessVersion(InvalidWitnessVersionError),
@@ -379,6 +386,7 @@ pub enum EncodeError {
     Fmt(fmt::Error),
 }
 
+#[cfg(feature = "alloc")]
 impl fmt::Display for EncodeError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         use EncodeError::*;
@@ -393,6 +401,7 @@ impl fmt::Display for EncodeError {
 }
 
 #[cfg(feature = "std")]
+#[cfg(feature = "alloc")]
 impl std::error::Error for EncodeError {
     fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
         use EncodeError::*;
@@ -406,21 +415,25 @@ impl std::error::Error for EncodeError {
     }
 }
 
+#[cfg(feature = "alloc")]
 impl From<InvalidWitnessVersionError> for EncodeError {
     #[inline]
     fn from(e: InvalidWitnessVersionError) -> Self { Self::WitnessVersion(e) }
 }
 
+#[cfg(feature = "alloc")]
 impl From<WitnessLengthError> for EncodeError {
     #[inline]
     fn from(e: WitnessLengthError) -> Self { Self::WitnessLength(e) }
 }
 
+#[cfg(feature = "alloc")]
 impl From<SegwitCodeLengthError> for EncodeError {
     #[inline]
     fn from(e: SegwitCodeLengthError) -> Self { Self::TooLong(e) }
 }
 
+#[cfg(feature = "alloc")]
 impl From<fmt::Error> for EncodeError {
     #[inline]
     fn from(e: fmt::Error) -> Self { Self::Fmt(e) }

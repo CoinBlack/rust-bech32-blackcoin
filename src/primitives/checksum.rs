@@ -161,11 +161,13 @@ pub trait PackedFe32: Copy + PartialEq + Eq + ops::BitXor<Self, Output = Self> {
     /// add a new field element to the now-0 constant coefficient.
     ///
     /// Takes the degree of the polynomial as an input; for checksum applications
-    /// this shoud basically always be `Checksum::CHECKSUM_WIDTH`.
+    /// this should basically always be `Checksum::CHECKSUM_WIDTH`.
     fn mul_by_x_then_add(&mut self, degree: usize, add: u8) -> u8;
 }
 
-/// A placeholder type used as part of the [`crate::primitives::NoChecksum`] "checksum".
+/// A placeholder type used as part of the [`NoChecksum`] "checksum".
+///
+/// [`NoChecksum`]: crate::primitives::NoChecksum
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct PackedNull;
 
