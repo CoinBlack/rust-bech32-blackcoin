@@ -450,10 +450,9 @@ mod tests {
     // coverage see primitives submodules and test vectors.
     fn roundtrip_valid_mainnet_addresses() {
         // A few recent addresses from mainnet (Block 801266).
+        // Blackcoin supports segwit v0 only; taproot (v1/bech32m) is not deployed.
         let addresses = vec![
             "blk1qd08wdgs2j3t8hzmm92etm26z3jmh9xzv0et8gjv9fq39fmqwlfqq24u23m", // Segwit v0
-            // Blackcoin ToDo: put correct Segwit v1 address
-            "bc1py3m7vwnghyne9gnvcjw82j7gqt2rafgdmlmwmqnn3hvcmdm09rjqcgrtxs", // Segwit v1
         ];
 
         for address in addresses {
